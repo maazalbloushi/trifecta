@@ -1,6 +1,7 @@
 # trifecta
 
-### Link to application: https://github.com/scholarazwa/trifecta
+### Our GitHub account: https://github.com/scholarazwa/trifecta
+### Link to application: https://trifectagroup.shinyapps.io/shiny/
 
 #### Trifecta Group Shinny account
 Email: trifecta@azwa.io
