@@ -1,0 +1,10 @@
+name: shiny
+title:
+username:
+account: scholarazwa
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 325807
+bundleId: 1329164
+url: https://scholarazwa.shinyapps.io/shiny/
+when: 1524221308.17447
