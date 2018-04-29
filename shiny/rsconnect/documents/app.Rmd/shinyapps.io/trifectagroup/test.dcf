@@ -1,0 +1,12 @@
+name: test
+title: test
+username:
+account: trifectagroup
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 331819
+bundleId: 1342431
+url: https://trifectagroup.shinyapps.io/test/
+when: 1524806816.66915
+asMultiple: FALSE
+asStatic: FALSE

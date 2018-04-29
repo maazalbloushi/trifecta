@@ -1,0 +1,12 @@
+name: shiny
+title:
+username:
+account: trifectagroup
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 328976
+bundleId: 1342649
+url: https://trifectagroup.shinyapps.io/shiny/
+when: 1524816114.59026
+asMultiple: FALSE
+asStatic: FALSE

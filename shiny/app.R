@@ -1,73 +1,89 @@
 library(shiny)
-library(shinyCustom)
+library(shinydashboard)
 library(leaflet)
 library(RColorBrewer)
 
-# Define UI for app that draws a histogram ----
-ui <- fluidPage(
-  
-  # App title ----
-  titlePanel("Matching talents with job vacancies in Malaysia"),
-  
-  # Sidebar layout with input and output definitions ----
-  sidebarLayout(
+# USER INTERFACE:
+ui <- dashboardPage(
+        skin = "purple",
+        
+        dashboardHeader(
+            #disable = TRUE
+            title = "Trifecta Group"
+        ),
+        
+        dashboardSidebar(
+            disable = TRUE
+            #sidebarMenuOutput("menu")
+        ),
     
-    # Sidebar panel for inputs ----
-    sidebarPanel(
-      
-      useShinyCustom(slider_delay = "0"),
-      customSliderInput("bins", #Use customSliderInput instead of sliderInput
-                        "Number of bins:",
-                        min = 1,
-                        max = 50,
-                        value = 30),
-      
-      selectInput("var", 
-                  label = "Please select the state:",
-                  choices = c("Perak", 
-                              "Pulau Pinang", 
-                              "Kedah", 
-                              "Perlis", 
-                              "Johor", 
-                              "Kelantan", 
-                              "Melaka", 
-                              "Negeri Sembilan", 
-                              "Pahang", 
-                              "Selangor", 
-                              "Trengganu", 
-                              "Sabah", 
-                              "Sarawak", 
-                              "Kuala Lumpur", 
-                              "Putrajaya", 
-                              "Labuan"),
-                  selected = "Percent White"),
-      
-      sliderInput("range", 
-                  label = "Range of interest:",
-                  min = 0, max = 100, value = c(0, 100))
-    ),
-    
-    mainPanel(leafletOutput("map"))
-  )
+        dashboardBody(
+            fluidRow(
+                
+                # This is the map view:
+                column(width = 9,
+                       box(title = "Map of job opportunities vs available talents in Malaysia", width = NULL, solidHeader = TRUE,
+                           leafletOutput("themap", height = 400),
+                           p(),
+                           actionButton("recalc", "Reset view")
+                       ),
+                       box(width = NULL,
+                           sliderInput("obs", "Map zoom:", min = 1, max = 1000, value = 500)
+                       )
+                ),
+                
+                # This is the column selection:
+                column(width = 3,
+                       box(width = NULL, status = "warning",
+                           uiOutput("routeSelect"),
+                           checkboxGroupInput("directions", "Show",
+                                choices = c(
+                                    Talents = 1,
+                                    Job_Opportunities = 2
+                                ),
+                                selected = c(1, 2)
+                           ),
+                           p(
+                               class = "text-muted",
+                               paste("Select to show either talents or job opportunities per state or select both."
+                               )
+                           ),
+                           actionButton("zoomButton", "Zoom to Area")
+                       ),
+                       box(width = NULL, status = "warning",
+                           selectInput("interval", "States",
+                                       choices = c(
+                                           "Perlis" = 10,
+                                           "Pulau Pinang" = 20,
+                                           "Kedah" = 30,
+                                           "Kelantan" = 40,
+                                           "Terengganu" = 50,
+                                           "Pahang" = 60,
+                                           "Perak" = 70,
+                                           "Selangor" = 80,
+                                           "Kuala Lumpur" = 90,
+                                           "Negeri Sembilan" = 100,
+                                           "Melaka" = 110,
+                                           "Johor" = 120,
+                                           "Sabah" = 130,
+                                           "Sarawak" = 140
+                                       ),
+                                       selected = "40"
+                           )
+                       )
+                )
+            )
+        )
 )
 
-# Define server logic required to draw a histogram ----
+# SERVER:
 server <- function(input, output) {
-  
-  # Histogram of the Old Faithful Geyser Data ----
-  # with requested number of bins
-  # This expression that generates a histogram is wrapped in a call
-  # to renderPlot to indicate that:
-  #
-  # 1. It is "reactive" and therefore should be automatically
-  #    re-executed when inputs (input$bins) change
-  # 2. Its output type is a plot
-  output$map <- renderLeaflet({
-    leaflet() %>%
-      setView(lng = 101.654390, lat = 3.120111, zoom = 10) %>%
-      addProviderTiles(providers$Esri.NatGeoWorldMap, options = providerTileOptions(noWrap = TRUE))
-  })
-  
+    
+    output$themap <- renderLeaflet({
+        leaflet() %>%
+            setView(lng = 101.654390, lat = 3.120111, zoom = 8) %>%
+            addProviderTiles(providers$Esri.WorldGrayCanvas, options = providerTileOptions(noWrap = TRUE))
+    })
 }
 
 shinyApp(ui = ui, server = server)
