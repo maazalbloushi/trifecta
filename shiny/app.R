@@ -2,6 +2,9 @@ library(shiny)
 library(shinydashboard)
 library(leaflet)
 library(RColorBrewer)
+library(geojsonio)
+library(sp)
+library(sf)
 
 # USER INTERFACE:
 ui <- dashboardPage(
@@ -80,10 +83,13 @@ ui <- dashboardPage(
 server <- function(input, output) {
     
     output$themap <- renderLeaflet({
+        geoData <- readLines("json/malaysia.geojson") %>% paste(collapse = "\n")
         leaflet() %>%
             setView(lng = 101.654390, lat = 3.120111, zoom = 8) %>%
-            addProviderTiles(providers$Esri.WorldGrayCanvas, options = providerTileOptions(noWrap = TRUE))
+            addProviderTiles(providers$Esri.WorldGrayCanvas, options = providerTileOptions(noWrap = TRUE))%>%
+            addGeoJSON(geoData, weight = 2, color = "#000", fill = FALSE)
     })
+    
 }
 
 shinyApp(ui = ui, server = server)
