@@ -29,10 +29,8 @@ ui <- dashboardPage(
                            leafletOutput("themap", height = 400),
                            p(),
                            actionButton("recalc", "Reset view")
-                       ),
-                       box(width = NULL,
-                           sliderInput("obs", "Map zoom:", min = 1, max = 1000, value = 500)
                        )
+                       
                 ),
                 
                 # This is the column selection:
@@ -73,6 +71,9 @@ ui <- dashboardPage(
                                        ),
                                        selected = "40"
                            )
+                       ),
+                       box(width = NULL,
+                           sliderInput("obs", "Map zoom:", min = 1, max = 15, value = 8)
                        )
                 )
             )
@@ -83,9 +84,10 @@ ui <- dashboardPage(
 server <- function(input, output) {
     
     output$themap <- renderLeaflet({
+        zoomV <- input$obs
         geoData <- readLines("json/malaysia.geojson") %>% paste(collapse = "\n")
         leaflet() %>%
-            setView(lng = 101.654390, lat = 3.120111, zoom = 8) %>%
+            setView(lng = 101.654390, lat = 3.120111, zoom = zoomV) %>%
             addProviderTiles(providers$Esri.WorldGrayCanvas, options = providerTileOptions(noWrap = TRUE))%>%
             addGeoJSON(geoData, weight = 2, color = "#000", fill = FALSE)
     })
