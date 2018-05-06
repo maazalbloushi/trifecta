@@ -2,9 +2,6 @@ library(shiny)
 library(shinydashboard)
 library(leaflet)
 library(RColorBrewer)
-library(geojsonio)
-library(sp)
-library(sf)
 
 # USER INTERFACE:
 ui <- dashboardPage(
