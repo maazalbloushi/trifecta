@@ -25,10 +25,6 @@ ui <- fluidPage(
 
 server <- function(input, output) {
     
-    # mydata <- reactive({
-    #     inFile <-    
-    # })
-    
     dat <- read.csv(file = "dataset/dataset.csv")
     output$table <- renderTable(dat)
     
