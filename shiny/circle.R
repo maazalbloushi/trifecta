@@ -8,8 +8,10 @@ ui <- fluidPage(
 
     mainPanel(
         
-        column(12,
-               tableOutput('table')
+        column(6,
+               box(width=NULL,
+                tableOutput('table')
+               )
         ),
         
         leafletOutput("themap", height = 500, width = 900),

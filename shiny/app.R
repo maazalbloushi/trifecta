@@ -3,6 +3,9 @@ library(leaflet)
 library(RColorBrewer)
 library(shiny)
 library(shinydashboard)
+library(xlsx)
+library(rJava)
+library(DT)
 
 # -------------------------- #
 
@@ -24,11 +27,11 @@ ui <- dashboardPage(
                 column(width = 9,
                        box(title = "Map of job opportunities vs available talents in Malaysia", width = NULL, solidHeader = TRUE,
                            leafletOutput("themap", height = 500)
-                       ),
-                       column(12,
-                              tableOutput('table')
                        )
-                       
+                       #,
+                       #column(12,
+                      #        tableOutput('table')
+                       #)
                 ),
                 
                 # This is the column selection:
@@ -51,13 +54,13 @@ ui <- dashboardPage(
                        box(width = NULL, status = "warning",
                            selectInput("states", "States",
                                        choices = c(
-                                           "Pulau Pinang" = 3,
-                                           "Kelantan" = 6,
-                                           "Perak" = 5,
-                                           "Selangor" = 2,
-                                           "Kuala Lumpur" = 1,
-                                           "Johor" = 4,
-                                           "Sarawak" = 7
+                                          "Kuala Lumpur" = 1,
+                                          "Selangor" = 2,
+                                          "Pulau Pinang" = 3,
+                                          "Johor" = 4,
+                                          "Perak" = 5,
+                                          "Kelantan" = 6,
+                                          "Sarawak" = 7
                                        ),
                                        selected = "2"
                            )
@@ -66,6 +69,12 @@ ui <- dashboardPage(
                            sliderInput("obs", "Map zoom:", min = 1, max = 20, value = 10)
                        )
                 )
+            ),
+            fluidRow(
+              column(width=12,
+                     box(width=5,tableOutput('table')),
+                     box(width=7,DT::dataTableOutput('diffTable'))#table to show state individual data
+              )
             )
         )
 )
@@ -76,8 +85,18 @@ server <- function(input, output) {
     
     dat <- read.csv(file = "dataset/dataset.csv")
     output$table <- renderTable(dat)
+  
+    #df2 <-read.xlsx("stateData/beforeCSV.xlsx", sheetIndex = 2,header = TRUE)
+    #output$diffTable <-renderTable(df2)
     
+    values <- reactiveValues(df2 = NULL) #for reset dataframe value when new state selected.
     
+    observeEvent(input$states, {
+      id2 <- as.integer(input$states) #set variable new state selected.
+      values$df2 <-read.xlsx("stateData/7StateData.xlsx", sheetIndex = id2) #change worksheet in excel
+    })
+    
+    output$diffTable <- DT::renderDataTable(values$df2) #render the table
     
     output$themap <- renderLeaflet({
         zoomV <- input$obs
