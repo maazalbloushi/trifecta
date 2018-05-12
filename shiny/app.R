@@ -3,6 +3,7 @@ library(leaflet)
 library(RColorBrewer)
 library(shiny)
 library(shinydashboard)
+library(DT)
 
 # -------------------------- #
 
@@ -22,7 +23,7 @@ ui <- dashboardPage(
                 
                 # This is the map view:
                 column(width = 9,
-                       box(title = "Map of job opportunities vs available talents in Malaysia", width = NULL, solidHeader = TRUE,
+                       box(title = "Analysis of Talent Shortage & Career Opportunity in Malaysia", width = NULL, solidHeader = TRUE,
                            leafletOutput("themap", height = 500)
                        )
                        #,
@@ -59,7 +60,7 @@ ui <- dashboardPage(
                                           "Kelantan" = 6,
                                           "Sarawak" = 7
                                        ),
-                                       selected = "2"
+                                       selected = "1"
                            )
                        ),
                        box(width = NULL,
@@ -69,9 +70,9 @@ ui <- dashboardPage(
             ),
             fluidRow(
               column(width=12,
-                     box(width=5,tableOutput('table')),
+                     box(width=4,tableOutput('table')),
                      #box(width=7,DT::dataTableOutput('diffTable'))#table to show state individual data
-                     box(width=7,tableOutput('table2'))
+                     box(width=8,tableOutput('table2'))
               )
             )
         )
@@ -81,8 +82,9 @@ ui <- dashboardPage(
 
 server <- function(input, output) {
     
+    datdisplay <- read.csv(file = "dataset/datasetdisplay.csv")
     dat <- read.csv(file = "dataset/dataset.csv")
-    output$table <- renderTable(dat)
+    output$table <- renderTable(datdisplay)
   
     values <- reactiveValues(dat2 = NULL) #for reset dataframe value when new state selected.
     
