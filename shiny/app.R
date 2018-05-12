@@ -3,9 +3,6 @@ library(leaflet)
 library(RColorBrewer)
 library(shiny)
 library(shinydashboard)
-library(xlsx)
-library(rJava)
-library(DT)
 
 # -------------------------- #
 
@@ -73,7 +70,8 @@ ui <- dashboardPage(
             fluidRow(
               column(width=12,
                      box(width=5,tableOutput('table')),
-                     box(width=7,DT::dataTableOutput('diffTable'))#table to show state individual data
+                     #box(width=7,DT::dataTableOutput('diffTable'))#table to show state individual data
+                     box(width=7,tableOutput('table2'))
               )
             )
         )
@@ -86,17 +84,14 @@ server <- function(input, output) {
     dat <- read.csv(file = "dataset/dataset.csv")
     output$table <- renderTable(dat)
   
-    #df2 <-read.xlsx("stateData/beforeCSV.xlsx", sheetIndex = 2,header = TRUE)
-    #output$diffTable <-renderTable(df2)
-    
-    values <- reactiveValues(df2 = NULL) #for reset dataframe value when new state selected.
+    values <- reactiveValues(dat2 = NULL) #for reset dataframe value when new state selected.
     
     observeEvent(input$states, {
-      id2 <- as.integer(input$states) #set variable new state selected.
-      values$df2 <-read.xlsx("stateData/7StateData.xlsx", sheetIndex = id2) #change worksheet in excel
-    })
-    
-    output$diffTable <- DT::renderDataTable(values$df2) #render the table
+      csvSelected <- paste("stateData/",input$states,".csv",sep = "") #filepath creation with selectedInput
+      values$dat2 <-read.csv(csvSelected) #load the csv
+     })
+     
+    output$table2 <- renderTable(values$dat2) #render the table
     
     output$themap <- renderLeaflet({
         zoomV <- input$obs

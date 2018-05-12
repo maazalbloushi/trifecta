@@ -5,8 +5,8 @@ account: trifectagroup
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 328976
-bundleId: 1358401
+bundleId: 1368523
 url: https://trifectagroup.shinyapps.io/shiny/
-when: 1525598239.72147
+when: 1526041628.4575
 asMultiple: FALSE
 asStatic: FALSE
