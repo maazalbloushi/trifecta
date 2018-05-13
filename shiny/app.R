@@ -12,7 +12,7 @@ library(shinydashboard)
 ui <- fluidPage(
                 tags$style(type="text/css", "body {padding-top: 50px;}"),
                 theme = shinytheme("united"),
-                navbarPage("Trifecta Group", id = "selector",
+                navbarPage("The Trifecta", id = "selector",
                            position = "fixed-top", header = NULL,
                            tabPanel("Map Analysis", value = 1, 
                                     fluidRow(
@@ -75,15 +75,52 @@ ui <- fluidPage(
                             ),
                            tabPanel("Documentation", value = 2, 
                                     fluidRow(
-                                        titlePanel(HTML("<font size='5'>&nbsp;&nbsp;&nbsp;Documentation</font>"))
+                                        titlePanel(HTML("<font size='5'>&nbsp;&nbsp;&nbsp;Documentation</font>")),
+                                        
+                                        column(width = 12, 
+                                               p(
+                                                   HTML("This Shiny application presents several information about the availability of talents and career prospects for several states in Malaysia.")
+                                               ),
+                                               br(),
+                                               p(
+                                                   HTML("<h4>The Map Widget</h4>"),
+                                                   p(
+                                                       HTML("The main widget is the Map, which shows the number of students currently enrolled in vocational college for a particular state and is designated by a blue circle. Within the same map, the number of available jobs for each selected state are also presented by a red circle. The size of the circle indicates how large or small the availability of either talent or career opportunity. If the talent circle (blue) is smaller than the job opportunity circle (red), it means that there is a shortage of skilled workers to fill in those job demands. If the situation is reversed, it shows that there is an excess of talents but no jobs to fulfil them. This relationship shows how skilled workers in Malaysia could make the decision to move to a different state in order to find jobs available for their sector.")
+                                                   )
+                                                        
+                                               ),
+                                               br(),
+                                               p(
+                                                   HTML("<h4>The Legend Checkbox Widget</h4>"),
+                                                   p(
+                                                       HTML("Two main types of data are presented within the map and can be controlled by the Legend checkboxes. To show only the available talents designated by blue circles inside the map, you may check the “Talent availability” checkbox and uncheck the “Job opportunity” checkbox. To show only the job opportunity designated by red circles inside the map, check the “Job opportunity” checkbox and uncheck the “Talent availability” checkbox. Checking or unchecking both checkboxes will show or hide both types of data on the map.")
+                                                   )
+                                               ),
+                                               br(),
+                                               p(
+                                                   HTML("<h4>The States Dropdown Widget</h4>"),
+                                                   p(
+                                                       HTML("You can use the State dropdown widget to see the information for other states in Malaysia. By selecting a state using this widget, the map will move to that particular state and display the circles representing both talent availability and job opportunity according to their designated colours.")
+                                                   )
+                                               ),
+                                               br(),
+                                               p(
+                                                   HTML("<h4>The Map Zoom Widget</h4>"),
+                                                   p(
+                                                       HTML("In order to zoom in or out of the map, you may drag the slider on the Map Zoom widget. The maximum zoom out value is 1 and zoom in value is 20.")
+                                                   )
+                                               )
+                                        )
                                     )
                             ),
                            tabPanel("About", value = 3, 
                                     fluidRow(
                                         titlePanel(HTML("<font size='5'>&nbsp;&nbsp;&nbsp;About the Shiny application</font>")),
-                                        
-                                        p(
-                                            "    This application is a group project for the Principles of Data Science course (WQD7001)"   
+
+                                        column(width = 12,
+                                            p(
+                                                HTML("This Shiny application is developed to show the relationship between the availability of talents and career opportunities in Malaysia by looking at the datasets from The Malaysian Administrative Modernisation and Management Planning Unit (MAMPU). The link between talents and job prospects are made by combining both the data of Vacancies for Non-graduates by State and Occupational Category (Sector) with the data of Vocational College Enrollments by State.")
+                                            )
                                         )
                                     )
                            )
