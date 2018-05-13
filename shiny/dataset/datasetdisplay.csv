@@ -1,8 +1,8 @@
-State,Talent,Opportunity
-Kuala Lumpur,1596,21675
-Selangor,6239,49798
-Pulau Pinang,552,9146
-Johor,5956,24954
-Perak,7885,9672
-Kelantan,4101,781
-Sarawak,5198,1316
+State,Talent,Opportunity,Sector with Highest Employment *
+Kuala Lumpur,1596,21675,Pekerja Perkhidmatan & Jualan
+Selangor,6239,49798,Operator Logi & Mesin dan Pemasangan
+Pulau Pinang,552,9146,Operator Logi & Mesin dan Pemasangan
+Johor,5956,24954,Operator Logi & Mesin dan Pemasangan
+Perak,7885,9672,Operator Logi & Mesin dan Pemasangan
+Kelantan,4101,781,Profesional
+Sarawak,5198,1316,Juruteknik & Profesional Bersekutu
