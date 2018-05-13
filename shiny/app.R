@@ -25,7 +25,7 @@ ui <- fluidPage(
                                                    fluidRow(
                                                         
                                                        # Map of Malaysia:
-                                                       box(width = NULL, title = HTML("<font size='4'>Map of Malaysia</font>"), 
+                                                       box(width = 12, title = HTML("<font size='4'>Map of Malaysia</font>"), 
                                                            leafletOutput("tableMalaysiaMap", height = 400)),
                                                    
                                                       p(),
@@ -70,7 +70,7 @@ ui <- fluidPage(
                                             # Right Side - Student Enrollment:
                                             column(width = 5, 
                                                    fluidRow(
-                                                       box(width = NULL, title = HTML("<font size='4'>Student Enrollment and Career Opportunity</font>"), tableOutput('tableEnrollmentCareer'))
+                                                       box(width = 12, title = HTML("<font size='4'>Student Enrollment and Career Opportunity</font>"), tableOutput('tableEnrollmentCareer'))
                                                    )
                                             )
                                         )
