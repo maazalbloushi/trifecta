@@ -16,7 +16,7 @@ ui <- fluidPage(
                            position = "fixed-top", header = NULL,
                            tabPanel("Map Analysis", value = 1, 
                                     fluidRow(
-                                            titlePanel(HTML("<font size='5'>Analysis of Talent Shortage & Career Opportunity in Malaysia</font>")),
+                                            titlePanel(HTML("<font size='5'>&nbsp;&nbsp;&nbsp;Analysis of Talent Shortage & Career Opportunity in Malaysia</font>")),
                                             
                                             # Left Side
                                             column(width = 6,
@@ -26,23 +26,21 @@ ui <- fluidPage(
                                                         
                                                        # Map of Malaysia:
                                                        box(width = 12, title = HTML("<font size='4'>Map of Malaysia</font>"), 
-                                                           leafletOutput("tableMalaysiaMap", height = 400)),
-                                                   
-                                                      p(),
+                                                           leafletOutput("tableMalaysiaMap", height = 400),
+                                                           br()
+                                                           ),
                                                       
                                                    # Show / Hide checkboxes:
-                                                   box(height = 100,width = 4,status = "warning",
+                                                   box(height = 65,width = 3,status = "warning",
                                                        uiOutput("routeSelect"),
-                                                       checkboxGroupInput("supplydemand", "Show",
-                                                                          choices = c(
-                                                                              "Talent Availablity" = 'talents',
-                                                                              "Job Opportunity" = 'jobs'
-                                                                          ),
+                                                       checkboxGroupInput("supplydemand", "Legend",
+                                                                          choiceNames = list(HTML("<font size='2'>Talent availability</font>"), HTML("<font size='2'>Job opportunity</font>")),
+                                                                          choiceValues = list("talents", "jobs"),
                                                                           selected = c('talents', 'jobs')
                                                        )
                                                    ),
                                                    
-                                                   box(height = 100,width = 4,status = "warning",
+                                                   box(height = 65,width = 3,status = "warning",
                                                        selectInput("states", "States",
                                                                    choices = c(
                                                                        "Kuala Lumpur" = 1,
@@ -53,16 +51,16 @@ ui <- fluidPage(
                                                                        "Kelantan" = 6,
                                                                        "Sarawak" = 7
                                                                    ),
-                                                                   selected = "1"
+                                                                   selected = "2"
                                                        )
                                                    ),
                                                    
-                                                   box(height = 100,width = 4, sliderInput("obs", "Map zoom:", min = 1, max = 20, value = 10)),
+                                                   box(height = 65,width = 6, sliderInput("obs", "Map zoom:", min = 1, max = 20, value = 10)),
 
                                                    
                                                    # State Demography
                                                    fluidRow(
-                                                       box(width = 5, title = HTML("<font size='4'>State Demography</font>"), tableOutput('table'))
+                                                       box(width = 8, title = HTML("<font size='4'>&nbsp;&nbsp;&nbsp;State Demography</font>"), tableOutput('table'))
                                                    )
                                                 )
                                             ),
@@ -70,7 +68,7 @@ ui <- fluidPage(
                                             # Right Side - Student Enrollment:
                                             column(width = 5, 
                                                    fluidRow(
-                                                       box(width = 12, title = HTML("<font size='4'>Student Enrollment and Career Opportunity</font>"), tableOutput('tableEnrollmentCareer'))
+                                                       box(width = 12, title = HTML("<font size='4'>&nbsp;&nbsp;&nbsp;Student Enrollment and Career Opportunity</font>"), tableOutput('tableEnrollmentCareer'))
                                                    )
                                             )
                                         )
@@ -102,11 +100,8 @@ server <- function(input, output) {
   
     output$tableEnrollmentCareer <- renderTable(values$dat2) #render the table
     
-    
-    
-    
-  
-  output$tableMalaysiaMap <- renderLeaflet({
+    # Malaysian Map
+    output$tableMalaysiaMap <- renderLeaflet({
     zoomV <- input$obs
     
     dat_Long = dat[input$states,"Longitude"]
@@ -127,7 +122,6 @@ server <- function(input, output) {
     geoData <- readLines("json/malaysia.geojson") %>% paste(collapse = "\n")
     
     leaflet(dat) %>% addTiles() %>%
-      #setView(lng = 101.654390, lat = 3.120111, zoom = zoomV) %>%
       setView(lng = dat_Long, lat = dat_Lat, zoom = zoomV) %>%
       addProviderTiles(providers$CartoDB.Positron, options = providerTileOptions(noWrap = TRUE)) %>%
       addGeoJSON(geoData, weight = 2, color = "#000", fill = FALSE) %>%
@@ -138,7 +132,6 @@ server <- function(input, output) {
                  radius = ~sqrt(Supply) * 50, popup = ~States, color = supplyC
       )
   })
-  
 }
 
 # --------------- #
