@@ -34,7 +34,7 @@ ui <- fluidPage(
                                                    box(height = 65,width = 3,status = "warning",
                                                        uiOutput("routeSelect"),
                                                        checkboxGroupInput("supplydemand", "Legend",
-                                                                          choiceNames = list(HTML("<font size='2'>Talent availability</font>"), HTML("<font size='2'>Job opportunity</font>")),
+                                                                          choiceNames = list(HTML("<font size='2' color='blue'>Talent availability</font>"), HTML("<font size='2' color='red'>Job opportunity</font>")),
                                                                           choiceValues = list("talents", "jobs"),
                                                                           selected = c('talents', 'jobs')
                                                        )
@@ -71,11 +71,22 @@ ui <- fluidPage(
                                                        box(width = 12, title = HTML("<font size='4'>&nbsp;&nbsp;&nbsp;Student Enrollment and Career Opportunity</font>"), tableOutput('tableEnrollmentCareer'))
                                                    )
                                             )
+                                    )
+                            ),
+                           tabPanel("Documentation", value = 2, 
+                                    fluidRow(
+                                        titlePanel(HTML("<font size='5'>&nbsp;&nbsp;&nbsp;Documentation</font>"))
+                                    )
+                            ),
+                           tabPanel("About", value = 3, 
+                                    fluidRow(
+                                        titlePanel(HTML("<font size='5'>&nbsp;&nbsp;&nbsp;About the Shiny application</font>")),
+                                        
+                                        p(
+                                            "    This application is a group project for the Principles of Data Science course (WQD7001)"   
                                         )
-                                    ),
-                           tabPanel("Datasets"),
-                           tabPanel("Instructions"),
-                           tabPanel("About")
+                                    )
+                           )
                 )
         )
 
