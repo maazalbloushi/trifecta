@@ -1,94 +1,112 @@
 library(rgdal)
 library(leaflet)
 library(RColorBrewer)
-library(shiny)
-library(shinydashboard)
 library(DT)
+library(shiny)
+library(shinythemes)
+library(shinydashboard)
 
-# -------------------------- #
+# --------------- #
+# USER INTERFACE
+# --------------- #
+ui <- fluidPage(
+                tags$style(type="text/css", "body {padding-top: 50px;}"),
+                theme = shinytheme("united"),
+                navbarPage("Trifecta Group", id = "selector",
+                           position = "fixed-top", header = NULL,
+                           tabPanel("Map Analysis", value = 1, 
+                                    fluidRow(
+                                            titlePanel(HTML("<font size='5'>Analysis of Talent Shortage & Career Opportunity in Malaysia</font>")),
+                                            
+                                            # Left Side
+                                            column(width = 6,
+                                                   
+                                                  
+                                                   fluidRow(
+                                                        
+                                                       # Map of Malaysia:
+                                                       box(width = NULL, title = HTML("<font size='4'>Map of Malaysia</font>"), 
+                                                           leafletOutput("tableMalaysiaMap", height = 400)),
+                                                   
+                                                      p(),
+                                                      
+                                                   # Show / Hide checkboxes:
+                                                   box(height = 100,width = 4,status = "warning",
+                                                       uiOutput("routeSelect"),
+                                                       checkboxGroupInput("supplydemand", "Show",
+                                                                          choices = c(
+                                                                              "Talent Availablity" = 'talents',
+                                                                              "Job Opportunity" = 'jobs'
+                                                                          ),
+                                                                          selected = c('talents', 'jobs')
+                                                       )
+                                                   ),
+                                                   
+                                                   box(height = 100,width = 4,status = "warning",
+                                                       selectInput("states", "States",
+                                                                   choices = c(
+                                                                       "Kuala Lumpur" = 1,
+                                                                       "Selangor" = 2,
+                                                                       "Pulau Pinang" = 3,
+                                                                       "Johor" = 4,
+                                                                       "Perak" = 5,
+                                                                       "Kelantan" = 6,
+                                                                       "Sarawak" = 7
+                                                                   ),
+                                                                   selected = "1"
+                                                       )
+                                                   ),
+                                                   
+                                                   box(height = 100,width = 4, sliderInput("obs", "Map zoom:", min = 1, max = 20, value = 10)),
 
-ui <- dashboardPage(
-  skin = "purple",
-  
-  dashboardHeader(
-    title = "Trifecta Group"
-  ),
-  
-  dashboardSidebar(
-    disable = TRUE
-  ),
-  
-  dashboardBody(
-    fluidRow(
-      
-      # This is the map view:
-      column(width = 6,
-             box(title = "Analysis of Talent Shortage & Career Opportunity in Malaysia", width = NULL, solidHeader = TRUE,
-                 leafletOutput("themap", height = 300)
-             ),
-             box(width=NULL,title = "State Demography",tableOutput('table'))
-             
-      ),
-      # This is the column of the table and selection:
-      column(width = 6, 
-             fluidRow(
-               box(height=170,width=4,status = "warning",
-                   uiOutput("routeSelect"),
-                   checkboxGroupInput("supplydemand", "Show",
-                                      choices = c(
-                                        "Talents" = 'talents',
-                                        "Job Opportunities" = 'jobs'
-                                      ),
-                                      selected = c('talents', 'jobs')
-                   ),
-                   p(
-                     class = "text-muted",
-                     paste("Select to show either talents or job opportunities per state or select both."
-                     )
-                   )
-               ),
-               box(height=170,width=4,status = "warning",
-                   selectInput("states", "States",
-                               choices = c(
-                                 "Kuala Lumpur" = 1,
-                                 "Selangor" = 2,
-                                 "Pulau Pinang" = 3,
-                                 "Johor" = 4,
-                                 "Perak" = 5,
-                                 "Kelantan" = 6,
-                                 "Sarawak" = 7
-                               ),
-                               selected = "1"
-                   )
-               ),
-               box(height=170,width=4,sliderInput("obs", "Map zoom:", min = 1, max = 20, value = 10))
-             ),
-             fluidRow(
-               box(title = "Student Enrollment and Career Opportunity in the Sector",width=NULL,tableOutput('table2'))
-             )
-      )
-    )
-  )
-)
+                                                   
+                                                   # State Demography
+                                                   fluidRow(
+                                                       box(width = 5, title = HTML("<font size='4'>State Demography</font>"), tableOutput('table'))
+                                                   )
+                                                )
+                                            ),
+                                            
+                                            # Right Side - Student Enrollment:
+                                            column(width = 5, 
+                                                   fluidRow(
+                                                       box(width = NULL, title = HTML("<font size='4'>Student Enrollment and Career Opportunity</font>"), tableOutput('tableEnrollmentCareer'))
+                                                   )
+                                            )
+                                        )
+                                    ),
+                           tabPanel("Datasets"),
+                           tabPanel("Instructions"),
+                           tabPanel("About")
+                )
+        )
 
-# -------------------------- #
-
+# --------------- #
+# SERVER SIDE
+# --------------- #
 server <- function(input, output) {
   
-  datdisplay <- read.csv(file = "dataset/datasetdisplay.csv")
-  dat <- read.csv(file = "dataset/dataset.csv")
-  output$table <- renderTable(datdisplay)
+    # Display the State Demography
+    datdisplay <- read.csv(file = "dataset/datasetdisplay.csv")
+    output$table <- renderTable(datdisplay)
   
-  values <- reactiveValues(dat2 = NULL) #for reset dataframe value when new state selected.
+    # Read the full state demography data (with longitude and latitude)
+    dat <- read.csv(file = "dataset/dataset.csv")
   
-  observeEvent(input$states, {
-    csvSelected <- paste("stateData/",input$states,".csv",sep = "") #filepath creation with selectedInput
-    values$dat2 <-read.csv(csvSelected) #load the csv
-  })
+    # Talent vs Availability Dataset selector
+    values <- reactiveValues(dat2 = NULL) #for reset dataframe value when new state selected.
+    observeEvent(input$states, {
+        csvSelected <- paste("stateData/",input$states,".csv",sep = "") #filepath creation with selectedInput
+        values$dat2 <- read.csv(csvSelected) #load the csv
+    })
   
-  output$table2 <- renderTable(values$dat2) #render the table
+    output$tableEnrollmentCareer <- renderTable(values$dat2) #render the table
+    
+    
+    
+    
   
-  output$themap <- renderLeaflet({
+  output$tableMalaysiaMap <- renderLeaflet({
     zoomV <- input$obs
     
     dat_Long = dat[input$states,"Longitude"]
@@ -123,6 +141,7 @@ server <- function(input, output) {
   
 }
 
-# -------------------------- #
-
+# --------------- #
+# APP BINDING
+# --------------- #
 shinyApp(ui = ui, server = server)
